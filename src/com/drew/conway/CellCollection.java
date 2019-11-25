@@ -1,10 +1,11 @@
-﻿/*
+/*
  * The CellCollection class is a two dimensional container for LifeCell objects.
  * It contains important methods which relate to the evolution of the simulator,
  * applying Conway's Life rules and Oscillator and StillLife coloring.
- */
+ *//*
 
-package com.drew;
+
+package com.drew.conway;
 
 import javafx.util.Pair;
 import java.util.HashSet;
@@ -247,53 +248,53 @@ public class CellCollection {
         LifeCell SW = _cells[WrapPlusOne(row), WrapMinusOne (column)];
         LifeCell NW = _cells[WrapMinusOne(row), WrapMinusOne (column)];
 
-        Current.LCMColored = true;
+        Current.lcmcolored = true;
         _cells[row, column].ColorState = Period;
 
         // check cell to upper left
-        if (!NW.LCMColored && GridPeriodicity[WrapMinusOne(row),WrapMinusOne(column)] >0)
+        if (!NW.lcmcolored && GridPeriodicity[WrapMinusOne(row),WrapMinusOne(column)] >0)
         {
             ColorOscillator(WrapMinusOne(row), WrapMinusOne(column), Period);
         }
 
         // check cell to upper right
-        if (!NE.LCMColored && GridPeriodicity[WrapMinusOne(row),WrapPlusOne(column)] >0)
+        if (!NE.lcmcolored && GridPeriodicity[WrapMinusOne(row),WrapPlusOne(column)] >0)
         {
             ColorOscillator(WrapMinusOne(row), WrapPlusOne(column), Period);
         }
 
         //check cell above
-        if (!N.LCMColored && GridPeriodicity[WrapMinusOne(row),column] >0)
+        if (!N.lcmcolored && GridPeriodicity[WrapMinusOne(row),column] >0)
         {
             ColorOscillator(WrapMinusOne(row), column, Period);
         }
 
         // check cell below
-        if (!S.LCMColored && GridPeriodicity[WrapPlusOne(row),column] >0)
+        if (!S.lcmcolored && GridPeriodicity[WrapPlusOne(row),column] >0)
         {
             ColorOscillator(WrapPlusOne(row), column, Period);
         }
 
         // check cell to left
-        if (!W.LCMColored && GridPeriodicity[row,WrapMinusOne(column)] >0)
+        if (!W.lcmcolored && GridPeriodicity[row,WrapMinusOne(column)] >0)
         {
             ColorOscillator(row, WrapMinusOne(column), Period);
         }
 
         // check cell to right
-        if (!E.LCMColored && GridPeriodicity[row,WrapPlusOne(column)] >0)
+        if (!E.lcmcolored && GridPeriodicity[row,WrapPlusOne(column)] >0)
         {
             ColorOscillator(row, WrapPlusOne(column), Period);
         }
 
         // check cell to bottom left
-        if (!SW.LCMColored && GridPeriodicity[WrapPlusOne(row),WrapMinusOne(column)] >0)
+        if (!SW.lcmcolored && GridPeriodicity[WrapPlusOne(row),WrapMinusOne(column)] >0)
         {
             ColorOscillator(WrapPlusOne(row), WrapMinusOne(column), Period);
         }
 
         // check cell to bottom right
-        if (!SE.LCMColored && GridPeriodicity[WrapPlusOne(row),WrapPlusOne(column)] >0)
+        if (!SE.lcmcolored && GridPeriodicity[WrapPlusOne(row),WrapPlusOne(column)] >0)
         {
             ColorOscillator(WrapPlusOne(row), WrapPlusOne(column), Period);
         }
@@ -317,53 +318,53 @@ public class CellCollection {
             //Current
 
             PeriodArray.Add(GridPeriodicity[row, column]);
-            Current.Visited = true;
+            Current.visited = true;
 
 
             // check cell to upper left
-            if ((!NW.Visited) && GridPeriodicity[WrapMinusOne(row),WrapMinusOne(column)] >0)
+            if ((!NW.visited) && GridPeriodicity[WrapMinusOne(row),WrapMinusOne(column)] >0)
             {
                 PeriodArray = PeriodArray.Concat(NeighboringPeriods(WrapMinusOne(row), WrapMinusOne(column))).ToList();
             }
 
             // check cell to upper right
-            if ((!NE.Visited) && GridPeriodicity[WrapMinusOne(row),WrapPlusOne(column)] >0)
+            if ((!NE.visited) && GridPeriodicity[WrapMinusOne(row),WrapPlusOne(column)] >0)
             {
                 PeriodArray = PeriodArray.Concat(NeighboringPeriods(WrapMinusOne(row), WrapPlusOne(column))).ToList();
             }
 
             //check cell above
-            if ((!N.Visited) && GridPeriodicity[WrapMinusOne(row),column] >0)
+            if ((!N.visited) && GridPeriodicity[WrapMinusOne(row),column] >0)
             {
                 PeriodArray = PeriodArray.Concat(NeighboringPeriods(WrapMinusOne(row), column)).ToList();
             }
 
             // check cell below
-            if ((!S.Visited) && GridPeriodicity[WrapPlusOne(row),column] >0)
+            if ((!S.visited) && GridPeriodicity[WrapPlusOne(row),column] >0)
             {
                 PeriodArray = PeriodArray.Concat(NeighboringPeriods(WrapPlusOne(row), column)).ToList();
             }
 
             // check cell to left
-            if ((!W.Visited) && GridPeriodicity[row,WrapMinusOne(column)] >0)
+            if ((!W.visited) && GridPeriodicity[row,WrapMinusOne(column)] >0)
             {
                 PeriodArray = PeriodArray.Concat(NeighboringPeriods(row, WrapMinusOne(column))).ToList();
             }
 
             // check cell to right
-            if ((!E.Visited) && GridPeriodicity[row,WrapPlusOne(column)] >0)
+            if ((!E.visited) && GridPeriodicity[row,WrapPlusOne(column)] >0)
             {
                 PeriodArray = PeriodArray.Concat(NeighboringPeriods(row, WrapPlusOne(column))).ToList();
             }
 
             // check cell to bottom left
-            if ((!SW.Visited) && GridPeriodicity[WrapPlusOne(row),WrapMinusOne(column)] >0)
+            if ((!SW.visited) && GridPeriodicity[WrapPlusOne(row),WrapMinusOne(column)] >0)
             {
                 PeriodArray = PeriodArray.Concat(NeighboringPeriods(WrapPlusOne(row), WrapMinusOne(column))).ToList();
             }
 
             // check cell to bottom right
-            if ((!SE.Visited) && GridPeriodicity[WrapPlusOne(row),WrapPlusOne(column)] >0)
+            if ((!SE.visited) && GridPeriodicity[WrapPlusOne(row),WrapPlusOne(column)] >0)
             {
                 PeriodArray = PeriodArray.Concat(NeighboringPeriods(WrapPlusOne(row), WrapPlusOne(column))).ToList();
             }
@@ -399,7 +400,7 @@ public class CellCollection {
         for (int row = 0; row < _size; row++) {
             for (int col = 0; col < _size; col++) {
                 LifeCell cell = _cells[row, col];
-                if (cell.IsAlive) {
+                if (cell.isAlive) {
                     sb.Append('O');
                 } else {
                     sb.Append('.');
@@ -525,3 +526,4 @@ public class CellCollection {
 
 
 }
+*/

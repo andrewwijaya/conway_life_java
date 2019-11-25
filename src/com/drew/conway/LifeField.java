@@ -1,13 +1,5 @@
-﻿/*
- * This class contains information about the current simulation such as
- * current number of live cells (population), current number of active cells,
- * whether or not the simulation is stable. A lot of these fields are attached
- * by a binding to the main user interface.
- */
-package com.drew;
+package com.drew.conway;
 
-//INotifyPropertyChanged
-//Data in this class needs to be bound to the UI
 public class LifeField {
     public int Columns;
     public int Rows;

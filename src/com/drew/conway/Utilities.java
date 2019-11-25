@@ -1,9 +1,9 @@
-﻿/*
+/*
  * Contains helper methods which are used by all other classes in the project
  */
 
 
-package com.drew;
+package com.drew.conway;
 
 public class Utilities {
     //Determines the periodic value of a cell's history which is encoded as a 32 bit string
