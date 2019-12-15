@@ -80,7 +80,7 @@ public class MainWindow extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(
-                MainWindow.class.getResource("controller/ConwayController.fxml"));
+                MainWindow.class.getClassLoader().getResource("ConwayController.fxml"));
         GridPane page = loader.load();
         Scene scene = new Scene(page);
         primaryStage.setTitle("Conway's Game of Life");
