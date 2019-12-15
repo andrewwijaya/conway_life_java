@@ -15,7 +15,7 @@ public class ConwayController {
     private static final Logger logger = Logger.getLogger(ConwayController.class.getName());
 
     private int maxGridSize = 200;
-    private int rectangleSize = 5;
+    private int rectangleSize = 3;
 
     //This is the data model for this controller, the LifeField object is a grid model representing the LifeCells
     private LifeField lifeField;
