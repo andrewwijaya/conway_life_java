@@ -5,8 +5,10 @@ package com.drew.conway;
  * and reacts with the appropriate functions in all other classes.
  */
 
+import com.drew.conway.controller.ConwayController;
 import com.drew.conway.models.LifeField;
 import com.drew.conway.util.PatternDataUtils;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,7 +22,7 @@ public class MainWindow extends Application {
 
     private PatternDataUtils patternDataUtils = new PatternDataUtils();
     private LifeField lifeField;
-//    private CellCollection cellCollection;
+    //    private CellCollection cellCollection;
     private TimerTask timerTask = new TimerTask() {
         @Override
         public void run() {
@@ -84,6 +86,15 @@ public class MainWindow extends Application {
         primaryStage.setTitle("Conway's Game of Life");
         primaryStage.setScene(scene);
         primaryStage.show();
+        ConwayController conwayController = loader.getController();
+        //Why use an Animation Timer and not a standard Thread and while loop?
+        //https://stackoverflow.com/questions/35544985/java-update-stage-in-a-for-loop
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                conwayController.runConway();
+            }
+        }.start();
     }
 
     public static void main(String[] args) {

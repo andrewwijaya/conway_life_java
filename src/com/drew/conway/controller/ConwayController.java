@@ -1,5 +1,7 @@
 package com.drew.conway.controller;
 
+import com.drew.conway.models.LifeCell;
+import com.drew.conway.models.LifeField;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -12,24 +14,44 @@ public class ConwayController {
 
     private static final Logger logger = Logger.getLogger(ConwayController.class.getName());
 
+    private int maxGridSize = 200;
+    private int rectangleSize = 5;
+
+    //This is the data model for this controller, the LifeField object is a grid model representing the LifeCells
+    private LifeField lifeField;
+
     @FXML
     private GridPane world;
+    public volatile boolean isInitialised = false;
 
     @FXML
     private void initialize() {
+        lifeField = new LifeField(maxGridSize, maxGridSize);
         populateGrid();
+        isInitialised = true;
     }
 
-    private int maxGridSize = 200;
-    private int rectangleSize = 5;
+    public void runConway() {
+//        while (true) {
+//            try {
+//                Thread.sleep(5);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+            lifeField.updateConwayField();
+//        }
+    }
 
     private void populateGrid() {
         for (int row = 0; row < maxGridSize; row++) {
             for (int column = 0; column < maxGridSize; column++) {
                 Rectangle rect = new Rectangle();
+                LifeCell lifeCell = new LifeCell();
+                lifeField.lifeGrid[row][column] = lifeCell;
                 rect.setHeight(rectangleSize);
                 rect.setWidth(rectangleSize);
-                rect.setFill(randomColor());
+                rect.fillProperty().bindBidirectional(lifeCell.cellColor);
+                lifeCell.isAlive.setValue(getRandomCellState());
 //                rect.MouseLeftButtonDown += MouseLeft_Click;
                 world.add(rect, column, row);
 //                rect.DataContext = cellCollection[row, column];
@@ -37,8 +59,12 @@ public class ConwayController {
         }
     }
 
-    private Color randomColor(){
+    private Color randomColor() {
         Random r = new Random();
         return r.nextBoolean() ? Color.BLACK : Color.WHITE;
+    }
+
+    private boolean getRandomCellState() {
+        return new Random().nextBoolean();
     }
 }
