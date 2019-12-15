@@ -1,4 +1,4 @@
-package com.drew.conway;
+package com.drew.conway.models;
 
 public class LifeField {
     public int Columns;

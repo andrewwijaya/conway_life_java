@@ -1,4 +1,4 @@
-package com.drew.conway;
+package com.drew.conway.models;
 
 public class LifeCell {
     //Used to help with recursive methods in CellCollection class

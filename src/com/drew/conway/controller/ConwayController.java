@@ -1,4 +1,4 @@
-package com.drew.conway;
+package com.drew.conway.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
@@ -6,7 +6,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.util.Random;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ConwayController {

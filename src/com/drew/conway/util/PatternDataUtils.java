@@ -1,4 +1,4 @@
-package com.drew.conway;
+package com.drew.conway.util;
 
 public class PatternDataUtils {
     //Opens a pattern file and returns a string array which contain the pattern encoding and meta information

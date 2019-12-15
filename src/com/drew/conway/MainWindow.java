@@ -5,10 +5,11 @@ package com.drew.conway;
  * and reacts with the appropriate functions in all other classes.
  */
 
+import com.drew.conway.models.LifeField;
+import com.drew.conway.util.PatternDataUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -77,7 +78,7 @@ public class MainWindow extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(
-                MainWindow.class.getResource("ConwayController.fxml"));
+                MainWindow.class.getResource("controller/ConwayController.fxml"));
         GridPane page = loader.load();
         Scene scene = new Scene(page);
         primaryStage.setTitle("Conway's Game of Life");
