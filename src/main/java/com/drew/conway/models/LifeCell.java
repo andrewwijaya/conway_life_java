@@ -1,12 +1,14 @@
 package com.drew.conway.models;
 
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import sun.java2d.pipe.SpanShapeRenderer;
 
 public class LifeCell {
     //Used to help with recursive methods in CellCollection class
@@ -25,14 +27,11 @@ public class LifeCell {
 
     public LifeCell(){
         isAlive = new SimpleBooleanProperty();
-        isAlive.addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(newValue){
-                    cellColor.setValue(Color.BLACK);
-                }else{
-                    cellColor.setValue(Color.WHITE);
-                }
+        isAlive.addListener((observable, oldValue, newValue) -> {
+            if(newValue){
+                cellColor.setValue(Color.BLACK);
+            }else{
+                cellColor.setValue(Color.WHITE);
             }
         });
         cellColor = new SimpleObjectProperty<>();

@@ -32,14 +32,7 @@ public class ConwayController {
     }
 
     public void runConway() {
-//        while (true) {
-//            try {
-//                Thread.sleep(5);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-            lifeField.updateConwayField();
-//        }
+        lifeField.updateConwayField();
     }
 
     private void populateGrid() {
