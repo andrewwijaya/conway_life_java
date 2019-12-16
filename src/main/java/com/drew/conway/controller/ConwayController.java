@@ -14,7 +14,7 @@ public class ConwayController {
 
     private static final Logger logger = Logger.getLogger(ConwayController.class.getName());
 
-    private int maxGridSize = 200;
+    private int maxGridSize = 300;
     private int rectangleSize = 3;
 
     //This is the data model for this controller, the LifeField object is a grid model representing the LifeCells
@@ -48,6 +48,30 @@ public class ConwayController {
 //                rect.MouseLeftButtonDown += MouseLeft_Click;
                 world.add(rect, column, row);
 //                rect.DataContext = cellCollection[row, column];
+            }
+        }
+    }
+
+    //Resets the grid and clears necessary fields
+    public void clearField() {
+        for (int row = 0; row < maxGridSize; row++) {
+            for (int column = 0; column < maxGridSize; column++) {
+                lifeField.lifeGrid[row][column].isAlive.setValue(false);
+//                _cells[row, column].ColorState = 0;
+//                _nextGeneration[row, column] =false;
+            }
+        }
+//        ActiveSet.Clear();
+//        SecondaryActiveSet.Clear();
+//        field.PopulationCount = 0;
+//        field.Stable = false;
+//        GridHistory.Clear();
+    }
+
+    public void randomField(){
+        for (int row = 0; row < maxGridSize; row++) {
+            for (int column = 0; column < maxGridSize; column++) {
+                lifeField.lifeGrid[row][column].isAlive.setValue(getRandomCellState());
             }
         }
     }

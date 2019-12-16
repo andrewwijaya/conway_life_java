@@ -8,11 +8,13 @@
       xmlns="http://javafx.com/javafx"
       fx:controller="com.drew.conway.controller.OuterController">
     <fx:include fx:id="conway" source="ConwayController.fxml"></fx:include>
-    <VBox>
-        <Button text="Step"></Button>
-        <Button text="Stop"></Button>
-        <Button text="Clear"></Button>
-        <Button text="Load"></Button>
-        <Button text="Exit"></Button>
+    <VBox minWidth="150">
+        <Button text="Step" onAction="#stepButton" maxWidth="Infinity"></Button>
+        <Button text="Start" onAction="#startButton" maxWidth="Infinity"></Button>
+        <Button text="Stop" onAction="#stopButton" maxWidth="Infinity"></Button>
+        <Button text="Clear" onAction="#clearField" maxWidth="Infinity"></Button>
+        <Button text="Random" onAction="#randomButton" maxWidth="Infinity"></Button>
+        <Button text="Load" maxWidth="Infinity"></Button>
+        <Button text="Exit" onAction="#exit" maxWidth="Infinity"></Button>
     </VBox>
 </HBox>

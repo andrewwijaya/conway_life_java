@@ -378,21 +378,7 @@ public class CellCollection {
 
     }
 
-    //Resets the grid and clears necessary fields
-    public void ClearField() {
-        for (int row = 0; row < _size; row++) {
-            for (int column = 0; column < _size; column++) {
-                _cells[row, column].IsAlive = false;
-                _cells[row, column].ColorState = 0;
-                _nextGeneration[row, column] =false;
-            }
-        }
-        ActiveSet.Clear();
-        SecondaryActiveSet.Clear();
-        field.PopulationCount = 0;
-        field.Stable = false;
-        GridHistory.Clear();
-    }
+
 
     //Gets all the states of the cells on the grid and returns an encoded string
     public string GetPatternEncoding() {

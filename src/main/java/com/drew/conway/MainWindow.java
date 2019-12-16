@@ -5,21 +5,15 @@ package com.drew.conway;
  * and reacts with the appropriate functions in all other classes.
  */
 
-import com.drew.conway.controller.ConwayController;
 import com.drew.conway.controller.OuterController;
 import com.drew.conway.models.LifeField;
 import com.drew.conway.util.PatternDataUtils;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainWindow extends Application {
 
@@ -27,13 +21,6 @@ public class MainWindow extends Application {
     private PatternDataUtils patternDataUtils = new PatternDataUtils();
     private LifeField lifeField;
     //    private CellCollection cellCollection;
-    private TimerTask timerTask = new TimerTask() {
-        @Override
-        public void run() {
-            StepEvolution();
-        }
-    };
-    Timer timer = new Timer();
 
     //Gets the lifeField object from the CellCollection class
     //Sets up a timer for the evolution
@@ -58,27 +45,10 @@ public class MainWindow extends Application {
 //            cellCollection.AddNeighborhoodToQueue(cellCollection.ActiveSet, row, column);
 //        }
 
-    //Start button handler to begin simulation
-    private void startButtonClick() {
-        timer = new Timer();
-        timer.schedule(timerTask, 1000);
-    }
-
-    //Stop button handler to stop simulation
-    private void stopButtonClick() {
-        timer.cancel();
-    }
 
     private void createFieldCollection() {
 //        cellCollection = new CellCollection(maxGridSize);
 //        lifeField = cellCollection.field;
-    }
-
-    //Performs a single evolution
-    private void StepEvolution() {
-//        cellCollection.UpdateLife();
-//        lifeField.ActiveCellCount = cellCollection.ActiveSet.Count;
-//        lifeField.Iterations++;
     }
 
     @Override
@@ -93,12 +63,8 @@ public class MainWindow extends Application {
         OuterController outerController = loader.getController();
         //Why use an Animation Timer and not a standard Thread and while loop?
         //https://stackoverflow.com/questions/35544985/java-update-stage-in-a-for-loop
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                outerController.runConway();
-            }
-        }.start();
+
+        outerController.runConway();
     }
 
     public static void main(String[] args) {
@@ -107,25 +73,7 @@ public class MainWindow extends Application {
 
 //    }
 
-    //Clear button handler to clear simulator grid
-//    private void ClearButton_Click(object sender, RoutedEventArgs e) {
-//        ClearGrid();
-//        Timer.Stop();
-//        DescriptionTextBlock.Text = "";
-//        lifeField.PopulationCount = 0;
-//        lifeField.Iterations = 0;
-//        lifeField.ActiveCellCount = 0;
-//    }
 
-    //Clears the grid and sets all cells to be dead
-//    private void ClearGrid() {
-//        cellCollection.ClearField();
-//    }
-
-    //Random button handler to generate a random grid
-//    private void RandomButton_Click(object sender, RoutedEventArgs e) {
-//        cellCollection.RandomField();
-//    }
 
     ////GridSize handler to change the size of the grid
 //    private void GridSizeSelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -161,29 +109,4 @@ public class MainWindow extends Application {
 //        comboBox.SelectedIndex = 6;
 //    }
 
-//    //Saves the current grid on the simulator
-//    private void SavePatternButton_Click(object sender, RoutedEventArgs e) {
-//        string PatternEncoding = cellCollection.GetPatternEncoding();
-//        patternDataUtils.SavePatternToFile(PatternEncoding);
-//    }
-
-//    //Step button handler to do one single evolution
-//    private void StepButton_Click(object sender, RoutedEventArgs e) {
-//        StepEvolution();
-//    }
-
-
-    //Opens a .cells file
-//    private void OpenPatternFile_Click(object sender, RoutedEventArgs e) {
-//        Timer.Stop();
-//        string[] PatternData = patternDataUtils.OpenPattern();
-//        int startDrawRow;
-//        int startDrawCol;
-//        startDrawRow = 0;
-//        startDrawCol = 0;
-//        if (PatternData != null) {
-//            DescriptionTextBlock.Text = PatternData[0];
-//            cellCollection.DrawFullPattern(PatternData[1], startDrawRow, startDrawCol);
-//        }
-//    }
 }
