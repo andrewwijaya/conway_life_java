@@ -1,0 +1,18 @@
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<HBox fx:id="outer"
+      xmlns:fx="http://javafx.com/fxml"
+      xmlns="http://javafx.com/javafx"
+      fx:controller="com.drew.conway.controller.OuterController">
+    <fx:include fx:id="conway" source="ConwayController.fxml"></fx:include>
+    <VBox>
+        <Button text="Step"></Button>
+        <Button text="Stop"></Button>
+        <Button text="Clear"></Button>
+        <Button text="Load"></Button>
+        <Button text="Exit"></Button>
+    </VBox>
+</HBox>

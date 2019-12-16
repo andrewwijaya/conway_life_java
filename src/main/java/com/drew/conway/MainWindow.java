@@ -6,19 +6,23 @@ package com.drew.conway;
  */
 
 import com.drew.conway.controller.ConwayController;
+import com.drew.conway.controller.OuterController;
 import com.drew.conway.models.LifeField;
 import com.drew.conway.util.PatternDataUtils;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainWindow extends Application {
+
 
     private PatternDataUtils patternDataUtils = new PatternDataUtils();
     private LifeField lifeField;
@@ -80,19 +84,19 @@ public class MainWindow extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(
-                MainWindow.class.getClassLoader().getResource("ConwayController.fxml"));
-        GridPane page = loader.load();
+                MainWindow.class.getClassLoader().getResource("OuterController.fxml"));
+        HBox page = loader.load();
         Scene scene = new Scene(page);
         primaryStage.setTitle("Conway's Game of Life");
         primaryStage.setScene(scene);
         primaryStage.show();
-        ConwayController conwayController = loader.getController();
+        OuterController outerController = loader.getController();
         //Why use an Animation Timer and not a standard Thread and while loop?
         //https://stackoverflow.com/questions/35544985/java-update-stage-in-a-for-loop
         new AnimationTimer() {
             @Override
             public void handle(long now) {
-                conwayController.runConway();
+                outerController.runConway();
             }
         }.start();
     }
