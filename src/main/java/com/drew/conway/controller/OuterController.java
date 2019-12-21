@@ -67,6 +67,7 @@ public class OuterController {
 //    Clears the grid and sets all cells to be dead
     public void clearField() {
         conwayController.clearField();
+        animationTimer.stop();
     }
 
     //Random button handler to generate a random grid

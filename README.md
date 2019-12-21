@@ -32,4 +32,6 @@ Feature ideas:
 10. Snapshot viewer
 11. Change colors
 12. Increase FPS
+13. Create .gol file format and parser to store gol snapshots - csv
+
 
