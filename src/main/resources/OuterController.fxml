@@ -16,5 +16,6 @@
         <Button text="Random" onAction="#randomButton" maxWidth="Infinity"></Button>
         <Button text="Load" maxWidth="Infinity"></Button>
         <Button text="Exit" onAction="#exit" maxWidth="Infinity"></Button>
+        <Label fx:id="stepCount" text="0"></Label>
     </VBox>
 </HBox>

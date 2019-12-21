@@ -19,3 +19,15 @@ You need maven and java 8
 
 Once you run that command you will see a GUI appear with a few controls to start/stop/step/create random patterns.
 
+Feature ideas:
+1. Port the rest of the C# code
+2. Generalise rules
+3. Extend stability detection and automate rule generation to search for unstable rules
+4. Generalise the dimensions and automate dimension generation to search for interesting dimensions
+5. Save initial state, save results
+6. Stability
+7. Collect statistics, average life per x size grid
+8. Deactivate UI and run continuously
+9. In continuous mode, reporting and result generation
+10. Snapshot viewer
+11. Change colors

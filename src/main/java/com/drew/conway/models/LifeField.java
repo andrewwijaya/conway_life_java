@@ -1,5 +1,10 @@
 package com.drew.conway.models;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
 import java.util.logging.Logger;
 
 public class LifeField {
@@ -11,7 +16,7 @@ public class LifeField {
     public LifeCell[][] lifeGrid;
 
     //How many evolutions has been performed
-    private int iterations;
+    private IntegerProperty iterations;
 
     //Number of active cells in the grid
     private int activeCellCount;
@@ -33,14 +38,19 @@ public class LifeField {
         //Grid always has equal number of rows and columns
         this.gridSize = rows;
         lifeGrid = new LifeCell[rows][columns];
+        iterations = new SimpleIntegerProperty();
     }
 
     public int getIterations() {
+        return iterations.get();
+    }
+
+    public IntegerProperty getIterationProperty() {
         return iterations;
     }
 
     public void setIterations(int iterations) {
-        this.iterations = iterations;
+        this.iterations.setValue(iterations);
     }
 
     public int getActiveCellCount() {
@@ -104,6 +114,7 @@ public class LifeField {
                 }
             }
         }
+        iterations.setValue(iterations.get() + 1);
     }
 
     //Counts the number of live neighbors of a particular cell
@@ -112,47 +123,47 @@ public class LifeField {
         int neighbors = 0;
 
         // check cell to upper left
-        if (lifeGrid[WrapMinusOne(row)][WrapMinusOne(column)].isAlive.get())
+        if (lifeGrid[WrapMinusOne(row, rows)][WrapMinusOne(column, columns)].isAlive.get())
             neighbors++;
 
         //check cell above
-        if (lifeGrid[WrapMinusOne(row)][column].isAlive.get())
+        if (lifeGrid[WrapMinusOne(row, rows)][column].isAlive.get())
             neighbors++;
 
         // check cell to upper right
-        if (lifeGrid[WrapMinusOne(row)][WrapPlusOne(column)].isAlive.get())
+        if (lifeGrid[WrapMinusOne(row, rows)][WrapPlusOne(column, columns)].isAlive.get())
             neighbors++;
 
         // check cell to left
-        if (lifeGrid[row][WrapMinusOne(column)].isAlive.get())
+        if (lifeGrid[row][WrapMinusOne(column, columns)].isAlive.get())
             neighbors++;
 
         // check cell to right
-        if (lifeGrid[row][WrapPlusOne(column)].isAlive.get())
+        if (lifeGrid[row][WrapPlusOne(column, columns)].isAlive.get())
             neighbors++;
 
         // check cell to bottom left
-        if (lifeGrid[WrapPlusOne(row)][WrapMinusOne(column)].isAlive.get())
+        if (lifeGrid[WrapPlusOne(row, rows)][WrapMinusOne(column, columns)].isAlive.get())
             neighbors++;
 
         // check cell below
-        if (lifeGrid[WrapPlusOne(row)][column].isAlive.get())
+        if (lifeGrid[WrapPlusOne(row, rows)][column].isAlive.get())
             neighbors++;
 
         // check cell to bottom right
-        if (lifeGrid[WrapPlusOne(row)][WrapPlusOne(column)].isAlive.get())
+        if (lifeGrid[WrapPlusOne(row, rows)][WrapPlusOne(column, columns)].isAlive.get())
             neighbors++;
         return neighbors;
     }
 
-    private int WrapMinusOne(int value) {
+    private int WrapMinusOne(int value, int max) {
         if (value == 0)
-            value = gridSize;
+            value = max;
         return value - 1;
     }
 
-    private int WrapPlusOne(int value) {
-        if (value >= gridSize - 1)
+    private int WrapPlusOne(int value, int max) {
+        if (value >= max - 1)
             value = -1;
         return value + 1;
     }

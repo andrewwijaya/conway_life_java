@@ -14,8 +14,13 @@ public class ConwayController {
 
     private static final Logger logger = Logger.getLogger(ConwayController.class.getName());
 
-    private int maxGridSize = 300;
-    private int rectangleSize = 3;
+    private int gridWidth = 250;
+    private int gridHeight = 150;
+    private int rectangleSize = 5;
+
+    public LifeField getLifeField() {
+        return lifeField;
+    }
 
     //This is the data model for this controller, the LifeField object is a grid model representing the LifeCells
     private LifeField lifeField;
@@ -26,7 +31,7 @@ public class ConwayController {
 
     @FXML
     private void initialize() {
-        lifeField = new LifeField(maxGridSize, maxGridSize);
+        lifeField = new LifeField(gridWidth,gridHeight);
         populateGrid();
         isInitialised = true;
     }
@@ -36,8 +41,8 @@ public class ConwayController {
     }
 
     private void populateGrid() {
-        for (int row = 0; row < maxGridSize; row++) {
-            for (int column = 0; column < maxGridSize; column++) {
+        for (int row = 0; row < gridHeight; row++) {
+            for (int column = 0; column < gridWidth; column++) {
                 Rectangle rect = new Rectangle();
                 LifeCell lifeCell = new LifeCell();
                 lifeField.lifeGrid[row][column] = lifeCell;
@@ -54,13 +59,14 @@ public class ConwayController {
 
     //Resets the grid and clears necessary fields
     public void clearField() {
-        for (int row = 0; row < maxGridSize; row++) {
-            for (int column = 0; column < maxGridSize; column++) {
+        for (int row = 0; row < gridHeight; row++) {
+            for (int column = 0; column < gridWidth; column++) {
                 lifeField.lifeGrid[row][column].isAlive.setValue(false);
 //                _cells[row, column].ColorState = 0;
 //                _nextGeneration[row, column] =false;
             }
         }
+        resetStatistics();
 //        ActiveSet.Clear();
 //        SecondaryActiveSet.Clear();
 //        field.PopulationCount = 0;
@@ -69,11 +75,17 @@ public class ConwayController {
     }
 
     public void randomField(){
-        for (int row = 0; row < maxGridSize; row++) {
-            for (int column = 0; column < maxGridSize; column++) {
+        for (int row = 0; row < gridHeight; row++) {
+            for (int column = 0; column < gridWidth; column++) {
                 lifeField.lifeGrid[row][column].isAlive.setValue(getRandomCellState());
             }
         }
+        resetStatistics();
+    }
+
+    private void resetStatistics(){
+        lifeField.setIterations(0);
+        lifeField.setPopulationCount(0);
     }
 
     private Color randomColor() {

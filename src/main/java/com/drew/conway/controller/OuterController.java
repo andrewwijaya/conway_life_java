@@ -1,7 +1,9 @@
 package com.drew.conway.controller;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 
 import java.util.Timer;
 
@@ -9,6 +11,9 @@ public class OuterController {
 
     @FXML
     private ConwayController conwayController;
+
+    @FXML
+    private Label stepCount;
 
     private AnimationTimer animationTimer = new AnimationTimer() {
         @Override
@@ -19,6 +24,7 @@ public class OuterController {
 
     public void runConway() {
         animationTimer.start();
+        stepCount.textProperty().bind(Bindings.convert(conwayController.getLifeField().getIterationProperty()));
     }
 
 

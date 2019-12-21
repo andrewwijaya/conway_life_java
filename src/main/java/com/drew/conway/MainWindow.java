@@ -8,15 +8,34 @@ package com.drew.conway;
 import com.drew.conway.controller.OuterController;
 import com.drew.conway.models.LifeField;
 import com.drew.conway.util.PatternDataUtils;
-import javafx.animation.AnimationTimer;
+import com.drew.conway.util.ConfigManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 public class MainWindow extends Application {
 
+    private static Logger log = Logger.getLogger(MainWindow.class.getName());
+
+    static {
+        InputStream stream = MainWindow.class.getClassLoader().
+                getResourceAsStream("logging.properties");
+        try {
+            LogManager.getLogManager().readConfiguration(stream);
+            log = Logger.getLogger(MainWindow.class.getName());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private PatternDataUtils patternDataUtils = new PatternDataUtils();
     private LifeField lifeField;
@@ -53,6 +72,10 @@ public class MainWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        log.info("Starting Conway's Game of Life application...");
+        log.info("Loading properties...");
+        Properties properties = ConfigManager.getProperties("conway.properties");
+        log.info("Firing up GUI...");
         FXMLLoader loader = new FXMLLoader(
                 MainWindow.class.getClassLoader().getResource("OuterController.fxml"));
         HBox page = loader.load();
