@@ -1,12 +1,13 @@
-/*
  * The CellCollection class is a two dimensional container for LifeCell objects.
  * It contains important methods which relate to the evolution of the simulator,
  * applying Conway's Life rules and Oscillator and StillLife coloring.
- *//*
+
 
 
 package com.drew.conway;
 
+import com.drew.conway.models.LifeCell;
+import com.drew.conway.models.LifeField;
 import javafx.util.Pair;
 import java.util.HashSet;
 import java.util.Set;
@@ -55,26 +56,10 @@ public class CellCollection {
         }
     }
 
-    public int Size
-
-    {
-        get {
-        return _size;
-    }
-        set {
-        _size = value;
-    }
-    }
-
+    public int Size;
     private int _size;
     public LifeCell[,]_cells;
-    public List<bool[,]>GridHistory
-
-    {
-        get;
-        set;
-    }
-
+    public List<bool[,]>GridHistory;
     int[,]GridPeriodicity;
     int[,]PreviousGridPeriods;
     public bool[,]_nextGeneration;
@@ -107,7 +92,7 @@ public class CellCollection {
         //This is when 32 grids have been stacked and is ready to detect periodic behavior
         else {
             string[,]strhistory = new string[_size, _size];
-
+            //every 32 steps, set all colorStates to 0
             foreach(LifeCell cell in _cells)
             {
                 cell.ColorState = 0;
@@ -173,7 +158,7 @@ public class CellCollection {
                             int[] PeriodCollection = test.ToArray();
                             int LCMPeriod;
                             if (PeriodCollection.Length > 1) {
-                                LCMPeriod = Utilities.Lcm(PeriodCollection);
+                                LCMPeriod = Utilities.lowestCommonMultiple(PeriodCollection);
                                 ColorOscillator(row, column, LCMPeriod);
                             }
                         }
@@ -381,7 +366,7 @@ public class CellCollection {
 
 
     //Gets all the states of the cells on the grid and returns an encoded string
-    public string GetPatternEncoding() {
+    public String GetPatternEncoding() {
         StringBuilder sb = new StringBuilder();
         for (int row = 0; row < _size; row++) {
             for (int col = 0; col < _size; col++) {
@@ -396,6 +381,7 @@ public class CellCollection {
         }
         return sb.ToString();
     }
+
 
     //Draws a pattern using an encoded string
     public void DrawFullPattern(string encoding, int startDrawRow, int startDrawCol) {
@@ -426,62 +412,6 @@ public class CellCollection {
         }
     }
 
-    //Counts the number of live neighbors of a particular cell
-    private int CountNeighbors(int row, int column) {
-        // total up the number of neighbors who are alive
-        int neighbors = 0;
-
-        // check cell to upper left
-        if (_cells[WrapMinusOne(row),WrapMinusOne(column)].IsAlive)
-        neighbors++;
-
-        //check cell above
-        if (_cells[WrapMinusOne(row),column].IsAlive)
-        neighbors++;
-
-        // check cell to upper right
-        if (_cells[WrapMinusOne(row),WrapPlusOne(column)].IsAlive)
-        neighbors++;
-
-        // check cell to left
-        if (_cells[row,WrapMinusOne(column)].IsAlive)
-        neighbors++;
-
-        // check cell to right
-        if (_cells[row,WrapPlusOne(column)].IsAlive)
-        neighbors++;
-
-        // check cell to bottom left
-        if (_cells[WrapPlusOne(row),WrapMinusOne(column)].IsAlive)
-        neighbors++;
-
-        // check cell below
-        if (_cells[WrapPlusOne(row),column].IsAlive)
-        neighbors++;
-
-        // check cell to bottom right
-        if (_cells[WrapPlusOne(row),WrapPlusOne(column)].IsAlive)
-        neighbors++;
-
-        return neighbors;
-    }
-
-    //Generates a randomly filled grid
-    public void RandomField() {
-        ClearField();
-        field.Iterations = 0;
-        Random rand = new Random();
-        for (int row = 0; row < _size; row++) {
-            for (int column = 0; column < _size; column++) {
-                if (rand.NextDouble() <= 0.15) {
-                    _cells[row, column].IsAlive = true;
-                    _nextGeneration[row, column] =true;
-                    AddNeighborhoodToQueue(ActiveSet, row, column);
-                    field.PopulationCount++;
-                }
-            }
-        }
-    }
 
     //Adds a neighborhood to a HashSet, this is to support the evolution of active cells
     public void AddNeighborhoodToQueue(HashSet<Tuple<int, int>> Set, int row, int column) {
@@ -497,19 +427,4 @@ public class CellCollection {
         Set.Add(new Tuple<int, int>(WrapPlusOne(row), WrapMinusOne(column)));
         Set.Add(new Tuple<int, int>(WrapMinusOne(row), WrapPlusOne(column)));
     }
-
-    private int WrapMinusOne(int value) {
-        if (value == 0)
-            value = _size;
-        return value - 1;
-    }
-
-    private int WrapPlusOne(int value) {
-        if (value >= _size - 1)
-            value = -1;
-        return value + 1;
-    }
-
-
 }
-*/
