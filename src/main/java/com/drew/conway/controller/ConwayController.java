@@ -2,6 +2,8 @@ package com.drew.conway.controller;
 
 import com.drew.conway.models.LifeCell;
 import com.drew.conway.models.LifeField;
+import com.drew.conway.util.ConfigManager;
+import javafx.beans.property.IntegerProperty;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -14,8 +16,8 @@ public class ConwayController {
 
     private static final Logger logger = Logger.getLogger(ConwayController.class.getName());
 
-    private int gridWidth = 250;
-    private int gridHeight = 150;
+    private int gridWidth = Integer.parseInt(ConfigManager.getProperty(ConfigManager.GRID_WIDTH));
+    private int gridHeight = Integer.parseInt(ConfigManager.getProperty(ConfigManager.GRID_HEIGHT));
     private int rectangleSize = 5;
 
     public LifeField getLifeField() {

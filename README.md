@@ -31,3 +31,5 @@ Feature ideas:
 9. In continuous mode, reporting and result generation
 10. Snapshot viewer
 11. Change colors
+12. Increase FPS
+

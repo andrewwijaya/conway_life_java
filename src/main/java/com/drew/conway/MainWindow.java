@@ -86,7 +86,7 @@ public class MainWindow extends Application {
         OuterController outerController = loader.getController();
         //Why use an Animation Timer and not a standard Thread and while loop?
         //https://stackoverflow.com/questions/35544985/java-update-stage-in-a-for-loop
-
+        log.info("Running conway algorithm...");
         outerController.runConway();
     }
 
