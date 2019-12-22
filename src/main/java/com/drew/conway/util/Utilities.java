@@ -19,7 +19,7 @@ public class Utilities {
                         }
                     }
                 }
-                if (CurrentPeriod == true) {
+                if (CurrentPeriod) {
                     return period;
                 }
             }
@@ -45,7 +45,7 @@ public class Utilities {
         return tmp;
     }
 
-    private static int lowestCommonMultiple(int x1, int x2) throws Exception {
+    private static int lowestCommonMultiple(int x1, int x2) {
         int a;
         int b;
         if (x1 < 0 || x2 < 0) {

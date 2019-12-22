@@ -3,10 +3,10 @@ package com.drew.conway.models;
 import com.drew.conway.util.Utilities;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class LifeField {
@@ -18,6 +18,7 @@ public class LifeField {
     public LifeCell[][] lifeGrid;
     private boolean[][][] GridHistory;
     private int[][] PreviousGridPeriods;
+    private int[][] GridPeriodicity;
     private int gridHistoryCounter = 0;
 
     //How many evolutions has been performed
@@ -45,6 +46,7 @@ public class LifeField {
         lifeGrid = new LifeCell[rows][columns];
         iterations = new SimpleIntegerProperty();
         GridHistory = new boolean[32][rows][columns];
+        GridPeriodicity = new int[rows][columns];
     }
 
     public int getIterations() {
@@ -123,11 +125,12 @@ public class LifeField {
         //Fills the GridHistory untill 32 grids have been stacked
         if (gridHistoryCounter < 32) {
             log.info("Adding to grid history..., counter: " + gridHistoryCounter);
-            boolean[][] newGrid = nextGeneration;
-            GridHistory[gridHistoryCounter] = newGrid;
+            GridHistory[gridHistoryCounter] = nextGeneration;
             gridHistoryCounter++;
         } else {
-            String[][] strhistory = new String[rows][columns];
+            log.info("Checking periodicity...");
+            //TODO: is this needed?
+//            String[][] strhistory = new String[rows][columns];
             //every 32 steps, set all colorStates to 0, which determines the colour of periodicity (not liveliness)
             for (int row = 0; row < rows ; row++){
                 for (int col = 0; col < columns ; col++){
@@ -136,7 +139,6 @@ public class LifeField {
             }
 
             //Check every cell in the grid
-            int[][] GridPeriodicity = new int[rows][columns];
             for (int row = 0; row < rows; row++) {
                 for (int column = 0; column < columns; column++) {
                     StringBuilder history = new StringBuilder();
@@ -151,7 +153,7 @@ public class LifeField {
                         }
                     }
                     String cellHistory = history.toString();
-                    strhistory[row][column] = cellHistory;
+//                    strhistory[row][column] = cellHistory;
                     int period = Utilities.DeterminePeriodicity(cellHistory);
                     GridPeriodicity[row][column] = period;
                     //???
@@ -195,10 +197,11 @@ public class LifeField {
                         //If current cell is not visited, then visit neighbors and get LCM
                         if (!lifeGrid[row][column].visited.get())
                         {
-                            List<int> test = NeighboringPeriods(row, column);
-                            int[] PeriodCollection = test.ToArray();
-                            int LCMPeriod;
-                            if (PeriodCollection.Length > 1) {
+                            List<Integer> test = NeighboringPeriods(row, column);
+                            int[] PeriodCollection = test.stream().mapToInt(i -> i).toArray();
+                            //TODO: is this initialisation correct?
+                            int LCMPeriod = 0;
+                            if (PeriodCollection.length > 1) {
                                 try {
                                     LCMPeriod = Utilities.lowestCommonMultiple(PeriodCollection);
                                 } catch (Exception e) {
@@ -217,86 +220,150 @@ public class LifeField {
                     lifeGrid[row][col].lcmcolored.set(false);
                 }
             }
-            //TODO
-//            GridHistory.Clear();
+            gridHistoryCounter = 0;
+            GridHistory = new boolean[32][rows][columns];
         }
         iterations.setValue(iterations.get() + 1);
     }
 
-    //This method returns a list of the periods of the neighbors
-    private List<int> NeighboringPeriods(int row, int column) {
-        if (GridPeriodicity[row,column] >0)
-        {
-            LifeCell Current = _cells[row, column];
-            LifeCell N = _cells[WrapMinusOne(row), column];
-            LifeCell S = _cells[WrapPlusOne(row), column];
-            LifeCell W = _cells[row, WrapMinusOne (column)];
-            LifeCell E = _cells[row, WrapPlusOne (column)];
-            LifeCell NE = _cells[WrapMinusOne(row), WrapPlusOne (column)];
-            LifeCell SE = _cells[WrapPlusOne(row), WrapPlusOne (column)];
-            LifeCell SW = _cells[WrapPlusOne(row), WrapMinusOne (column)];
-            LifeCell NW = _cells[WrapMinusOne(row), WrapMinusOne (column)];
+    //This method colors the patterns recursively
+    private void ColorOscillator(int row, int column, int Period) {
+        LifeCell Current = lifeGrid[row][column];
+        LifeCell N = lifeGrid[WrapMinusOne(row, rows)][column];
+        LifeCell S = lifeGrid[WrapPlusOne(row, rows)][column];
+        LifeCell W = lifeGrid[row][ WrapMinusOne (column, columns)];
+        LifeCell E = lifeGrid[row][ WrapPlusOne (column, columns)];
+        LifeCell NE = lifeGrid[WrapMinusOne(row, rows)][ WrapPlusOne (column, columns)];
+        LifeCell SE = lifeGrid[WrapPlusOne(row, rows)][ WrapPlusOne (column, columns)];
+        LifeCell SW = lifeGrid[WrapPlusOne(row, rows)][ WrapMinusOne (column, columns)];
+        LifeCell NW = lifeGrid[WrapMinusOne(row, rows)][ WrapMinusOne (column, columns)];
 
-            List<int> PeriodArray = new List<int>();
+        Current.lcmcolored.setValue(true);
+//        log.info("Setting period: " + Period);
+        lifeGrid[row][ column].colorState.setValue(Period);
+
+        // check cell to upper left
+        if (!NW.lcmcolored.get() && GridPeriodicity[WrapMinusOne(row, rows)][WrapMinusOne(column, columns)] >0)
+        {
+            ColorOscillator(WrapMinusOne(row, rows), WrapMinusOne(column, columns), Period);
+        }
+
+        // check cell to upper right
+        if (!NE.lcmcolored.get() && GridPeriodicity[WrapMinusOne(row,rows)][WrapPlusOne(column, columns)] >0)
+        {
+            ColorOscillator(WrapMinusOne(row, rows), WrapPlusOne(column, columns), Period);
+        }
+
+        //check cell above
+        if (!N.lcmcolored.get() && GridPeriodicity[WrapMinusOne(row, rows)][column] >0)
+        {
+            ColorOscillator(WrapMinusOne(row, rows), column, Period);
+        }
+
+        // check cell below
+        if (!S.lcmcolored.get() && GridPeriodicity[WrapPlusOne(row, rows)][column] >0)
+        {
+            ColorOscillator(WrapPlusOne(row, rows), column, Period);
+        }
+
+        // check cell to left
+        if (!W.lcmcolored.get() && GridPeriodicity[row][WrapMinusOne(column, columns)] >0)
+        {
+            ColorOscillator(row, WrapMinusOne(column, columns), Period);
+        }
+
+        // check cell to right
+        if (!E.lcmcolored.get() && GridPeriodicity[row][WrapPlusOne(column, columns)] >0)
+        {
+            ColorOscillator(row, WrapPlusOne(column, columns), Period);
+        }
+
+        // check cell to bottom left
+        if (!SW.lcmcolored.get() && GridPeriodicity[WrapPlusOne(row, rows)][WrapMinusOne(column, columns)] >0)
+        {
+            ColorOscillator(WrapPlusOne(row, rows), WrapMinusOne(column, columns), Period);
+        }
+
+        // check cell to bottom right
+        if (!SE.lcmcolored.get() && GridPeriodicity[WrapPlusOne(row, rows)][WrapPlusOne(column, columns)] >0)
+        {
+            ColorOscillator(WrapPlusOne(row, rows), WrapPlusOne(column, columns), Period);
+        }
+    }
+
+    //This method returns a list of the periods of the neighbors
+    private List<Integer> NeighboringPeriods(int row, int column) {
+        if (GridPeriodicity[row][column] > 0) {
+            LifeCell Current = lifeGrid[row][column];
+            LifeCell N = lifeGrid[WrapMinusOne(row, rows)][column];
+            LifeCell S = lifeGrid[WrapPlusOne(row, rows)][column];
+            LifeCell W = lifeGrid[row][WrapMinusOne(column, columns)];
+            LifeCell E = lifeGrid[row][WrapPlusOne(column, columns)];
+            LifeCell NE = lifeGrid[WrapMinusOne(row, rows)][WrapPlusOne(column, columns)];
+            LifeCell SE = lifeGrid[WrapPlusOne(row, rows)][WrapPlusOne(column, columns)];
+            LifeCell SW = lifeGrid[WrapPlusOne(row, rows)][WrapMinusOne(column, columns)];
+            LifeCell NW = lifeGrid[WrapMinusOne(row, rows)][WrapMinusOne(column, columns)];
+
+            List<Integer> PeriodArray = new ArrayList<>();
             //Current
 
-            PeriodArray.Add(GridPeriodicity[row, column]);
-            Current.visited = true;
+            PeriodArray.add(GridPeriodicity[row][column]);
+            Current.visited.setValue(true);
 
 
             // check cell to upper left
-            if ((!NW.visited) && GridPeriodicity[WrapMinusOne(row),WrapMinusOne(column)] >0)
+            if ((!NW.visited.get()) && GridPeriodicity[WrapMinusOne(row, rows)][WrapMinusOne(column, columns)] >0)
             {
-                PeriodArray = PeriodArray.Concat(NeighboringPeriods(WrapMinusOne(row), WrapMinusOne(column))).ToList();
+                PeriodArray.addAll(NeighboringPeriods(WrapMinusOne(row,rows), WrapMinusOne(column,columns)));
             }
 
             // check cell to upper right
-            if ((!NE.visited) && GridPeriodicity[WrapMinusOne(row),WrapPlusOne(column)] >0)
+            if ((!NE.visited.get()) && GridPeriodicity[WrapMinusOne(row,rows)][WrapPlusOne(column, columns)] >0)
             {
-                PeriodArray = PeriodArray.Concat(NeighboringPeriods(WrapMinusOne(row), WrapPlusOne(column))).ToList();
+                PeriodArray.addAll(NeighboringPeriods(WrapMinusOne(row,rows), WrapPlusOne(column, columns)));
             }
 
             //check cell above
-            if ((!N.visited) && GridPeriodicity[WrapMinusOne(row),column] >0)
+            if ((!N.visited.get()) && GridPeriodicity[WrapMinusOne(row, rows)][column] >0)
             {
-                PeriodArray = PeriodArray.Concat(NeighboringPeriods(WrapMinusOne(row), column)).ToList();
+                PeriodArray.addAll(NeighboringPeriods(WrapMinusOne(row,rows), column));
             }
 
             // check cell below
-            if ((!S.visited) && GridPeriodicity[WrapPlusOne(row),column] >0)
+            if ((!S.visited.get()) && GridPeriodicity[WrapPlusOne(row, rows)][column] >0)
             {
-                PeriodArray = PeriodArray.Concat(NeighboringPeriods(WrapPlusOne(row), column)).ToList();
+                PeriodArray.addAll(NeighboringPeriods(WrapPlusOne(row, rows), column));
             }
 
             // check cell to left
-            if ((!W.visited) && GridPeriodicity[row,WrapMinusOne(column)] >0)
+            if ((!W.visited.get()) && GridPeriodicity[row][WrapMinusOne(column, columns)] >0)
             {
-                PeriodArray = PeriodArray.Concat(NeighboringPeriods(row, WrapMinusOne(column))).ToList();
+                PeriodArray.addAll(NeighboringPeriods(row, WrapMinusOne(column, columns)));
             }
 
             // check cell to right
-            if ((!E.visited) && GridPeriodicity[row,WrapPlusOne(column)] >0)
+            if ((!E.visited.get()) && GridPeriodicity[row][WrapPlusOne(column,columns)] >0)
             {
-                PeriodArray = PeriodArray.Concat(NeighboringPeriods(row, WrapPlusOne(column))).ToList();
+                PeriodArray.addAll(NeighboringPeriods(row, WrapPlusOne(column, columns)));
             }
 
             // check cell to bottom left
-            if ((!SW.visited) && GridPeriodicity[WrapPlusOne(row),WrapMinusOne(column)] >0)
+            if ((!SW.visited.get()) && GridPeriodicity[WrapPlusOne(row, rows)][WrapMinusOne(column, columns)] >0)
             {
-                PeriodArray = PeriodArray.Concat(NeighboringPeriods(WrapPlusOne(row), WrapMinusOne(column))).ToList();
+                PeriodArray.addAll(NeighboringPeriods(WrapPlusOne(row, rows) ,WrapMinusOne(column, columns)));
             }
 
             // check cell to bottom right
-            if ((!SE.visited) && GridPeriodicity[WrapPlusOne(row),WrapPlusOne(column)] >0)
+            if ((!SE.visited.get()) && GridPeriodicity[WrapPlusOne(row, rows)][WrapPlusOne(column, columns)] >0)
             {
-                PeriodArray = PeriodArray.Concat(NeighboringPeriods(WrapPlusOne(row), WrapPlusOne(column))).ToList();
+                PeriodArray.addAll(NeighboringPeriods(WrapPlusOne(row, rows), WrapPlusOne(column, columns)));
             }
 
             return PeriodArray;
         }
             else
         {
-            return new List<int>();
+            return new ArrayList<>();
         }
 
     }

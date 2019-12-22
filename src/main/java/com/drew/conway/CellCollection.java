@@ -1,3 +1,4 @@
+/*
  * The CellCollection class is a two dimensional container for LifeCell objects.
  * It contains important methods which relate to the evolution of the simulator,
  * applying Conway's Life rules and Oscillator and StillLife coloring.
@@ -428,3 +429,4 @@ public class CellCollection {
         Set.Add(new Tuple<int, int>(WrapMinusOne(row), WrapPlusOne(column)));
     }
 }
+*/
