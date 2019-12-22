@@ -6,6 +6,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -43,6 +45,19 @@ public class LifeCell {
 
         });
         colorState = new SimpleIntegerProperty();
+        colorState.addListener((observable, oldValue, newValue) -> {
+            switch (newValue.intValue()){
+                case 1:
+                    cellColor.setValue(Color.RED);
+                    break;
+                case 2:
+                    cellColor.setValue(Color.YELLOW);
+                    break;
+                case 3:
+                    cellColor.setValue(Color.BROWN);
+                    break;
+            }
+        });
         lcmcolored = new SimpleBooleanProperty();
     }
 }

@@ -5,8 +5,6 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-import java.util.Timer;
-
 public class OuterController {
 
     @FXML

@@ -89,6 +89,27 @@ public class LifeField {
         return columns * rows;
     }
 
+    public void printTwoDimensionalGrid(boolean[][] grid){
+        System.out.println();
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                String i = grid[row][col] ? "X" : " ";
+                System.out.print("[" + i + "]");
+            }
+            System.out.println();
+        }
+    }
+
+    public void printTwoDimensionalIntGrid(int[][] grid){
+        System.out.println();
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                System.out.print("[" + grid[row][col] + "]");
+            }
+            System.out.println();
+        }
+    }
+
     /**
      * Method to update the grid using Conway's GOL rules
      */
@@ -124,9 +145,10 @@ public class LifeField {
         }
         //Fills the GridHistory untill 32 grids have been stacked
         if (gridHistoryCounter < 32) {
-            log.info("Adding to grid history..., counter: " + gridHistoryCounter);
+//            log.info("Adding to grid history..., counter: " + gridHistoryCounter);
             GridHistory[gridHistoryCounter] = nextGeneration;
             gridHistoryCounter++;
+//            printTwoDimensionalGrid(nextGeneration);
         } else {
             log.info("Checking periodicity...");
             //TODO: is this needed?
@@ -176,10 +198,14 @@ public class LifeField {
                 PreviousGridPeriods.Cast<int> ().SequenceEqual(emptyGrid.Cast < int>());*/
 
                 //TODO: not sure if this is equivalent to above
-                boolean isArraysEqual = Arrays.equals(PreviousGridPeriods, GridPeriodicity);
-                boolean isArraysEmpty = Arrays.equals(PreviousGridPeriods, emptyGrid);
+                log.info("Checking previous and current periodicity...");
+                boolean isArraysEqual = Arrays.deepEquals(PreviousGridPeriods, GridPeriodicity);
+//                boolean isArraysEmpty = Arrays.deepEquals(PreviousGridPeriods, emptyGrid);
+                printTwoDimensionalIntGrid(PreviousGridPeriods);
+                printTwoDimensionalIntGrid(GridPeriodicity);
 
-                if (isArraysEqual && !isArraysEmpty) {
+//                if (isArraysEqual && !isArraysEmpty) {
+                if (isArraysEqual) {
                     stable = true;
                 } else {
                     stable = false;

@@ -4,6 +4,10 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
+/**
+ * This class tests the Utilities.determinePeriodicity method, which takes a String of integers of range {0,1} and
+ * returns the periodicity. The periodicity is defined as when the integer 1 repeats in the 32 bit String.
+ */
 public class UtilitiesTest {
 
     @Test

@@ -34,4 +34,10 @@ Feature ideas:
 12. Increase FPS
 13. Create .gol file format and parser to store gol snapshots - csv
 
-
+Bugs:
+1. False stability detection - in some cases, stability is falsely detected when the grid is still evolving. The active
+areas of the grid are continually evolving and some parts are either still lives or dead. The active areas are non-periodic
+however the algorithm can flag stability as unknown periods are interpreted as dead (period 0). Question is, are dead cells
+classed as period 0? Does periodicity only apply to live cells? Comparing the previous grid periodicity with an empty grid
+partially solves the problem. Candidate solution: areas that are non periodic but was at some point in the past alive must
+be checked for periodicity? Is stability detection also restricted by the window to check periodicity? (32 bit string)
