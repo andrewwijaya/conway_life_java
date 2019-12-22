@@ -9,6 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.awt.*;
 import java.util.Random;
 import java.util.logging.Logger;
 
@@ -51,7 +52,12 @@ public class ConwayController {
                 rect.setHeight(rectangleSize);
                 rect.setWidth(rectangleSize);
                 rect.fillProperty().bindBidirectional(lifeCell.cellColor);
-                lifeCell.isAlive.setValue(getRandomCellState());
+                boolean state = getRandomCellState();
+                lifeCell.isAlive.setValue(state);
+                //TODO: optimise
+                if(state){
+                    lifeField.activeSet.add(new Point(row,column));
+                }
 //                rect.MouseLeftButtonDown += MouseLeft_Click;
                 world.add(rect, column, row);
 //                rect.DataContext = cellCollection[row, column];
@@ -79,7 +85,12 @@ public class ConwayController {
     public void randomField(){
         for (int row = 0; row < gridHeight; row++) {
             for (int column = 0; column < gridWidth; column++) {
-                lifeField.lifeGrid[row][column].isAlive.setValue(getRandomCellState());
+                boolean state = getRandomCellState();
+                lifeField.lifeGrid[row][column].isAlive.setValue(state);
+                //TODO:optimise
+                if(state){
+                    lifeField.activeSet.add(new Point(row, column));
+                }
             }
         }
         resetStatistics();

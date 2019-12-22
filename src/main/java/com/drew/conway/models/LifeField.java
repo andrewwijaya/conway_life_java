@@ -4,9 +4,9 @@ import com.drew.conway.util.Utilities;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.awt.*;
 import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class LifeField {
@@ -20,6 +20,8 @@ public class LifeField {
     private int[][] PreviousGridPeriods;
     private int[][] GridPeriodicity;
     private int gridHistoryCounter = 0;
+    public Set<Point> activeSet = new HashSet<>();
+    private Set<Point> secondarySet = new HashSet<>();
 
     //How many evolutions has been performed
     private IntegerProperty iterations;
@@ -117,32 +119,36 @@ public class LifeField {
         //Creates an intermediary two dimensional boolean array called nextGeneration, this is to prevent overwriting
         //the current grid
         boolean[][] nextGeneration = new boolean[rows][columns];
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
-                int neighbors = CountNeighbors(row, col);
-                if (!lifeGrid[row][col].isAlive.get() && neighbors == 3) {
-                    nextGeneration[row][col] = true;
-//                    AddNeighborhoodToQueue(SecondaryActiveSet, row, column);
-                    populationCount++;
-                } else if (lifeGrid[row][col].isAlive.get() && (neighbors == 3 || neighbors == 2)) {
-                    nextGeneration[row][col] = true;
-                } else if (lifeGrid[row][col].isAlive.get()) {
-                    nextGeneration[row][col] = false;
-//                    AddNeighborhoodToQueue(SecondaryActiveSet, row, column);
-                    populationCount--;
-                }
+        for (Point point : activeSet) {
+            int row = point.x;
+            int col = point.y;
+            int neighbors = CountNeighbors(row, col);
+            if (!lifeGrid[row][col].isAlive.get() && neighbors == 3) {
+                nextGeneration[row][col] = true;
+                AddNeighborhoodToQueue(secondarySet, row, col);
+                populationCount++;
+            } else if (lifeGrid[row][col].isAlive.get() && (neighbors == 3 || neighbors == 2)) {
+                nextGeneration[row][col] = true;
+            } else if (lifeGrid[row][col].isAlive.get()) {
+                nextGeneration[row][col] = false;
+                AddNeighborhoodToQueue(secondarySet, row, col);
+                populationCount--;
             }
+
         }
         //Once the nextGeneration grid has been generated, use the new values to update the actual UI model
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
-                if (nextGeneration[row][col]) {
-                    lifeGrid[row][col].isAlive.set(true);
-                } else {
-                    lifeGrid[row][col].isAlive.set(false);
-                }
+        for (Point point : activeSet) {
+            int row = point.x;
+            int col = point.y;
+            if (nextGeneration[row][col]) {
+                lifeGrid[row][col].isAlive.set(true);
+            } else {
+                lifeGrid[row][col].isAlive.set(false);
             }
         }
+        activeSet.clear();
+        activeSet = new HashSet<>(secondarySet);
+        secondarySet.clear();
         //Fills the GridHistory untill 32 grids have been stacked
         if (gridHistoryCounter < 32) {
 //            log.info("Adding to grid history..., counter: " + gridHistoryCounter);
@@ -186,18 +192,6 @@ public class LifeField {
             //Check for stability using periodicity of grid
             if (PreviousGridPeriods != null) {
                 int[][] emptyGrid = new int[rows][columns];
-
-/*                //Check if the grid is equal to each other
-                boolean equalArrays = PreviousGridPeriods.Rank == GridPeriodicity.Rank &&
-                        Enumerable.Range(0, PreviousGridPeriods.Rank).All(dimension = > PreviousGridPeriods.GetLength(dimension) == GridPeriodicity.GetLength(dimension)) &&
-                PreviousGridPeriods.Cast<int> ().SequenceEqual(GridPeriodicity.Cast < int>());
-
-                //Make sure that the grid is not an empty grid (unknown periods)
-                boolean isEmpty = PreviousGridPeriods.Rank == emptyGrid.Rank &&
-                        Enumerable.Range(0, PreviousGridPeriods.Rank).All(dimension = > PreviousGridPeriods.GetLength(dimension) == emptyGrid.GetLength(dimension)) &&
-                PreviousGridPeriods.Cast<int> ().SequenceEqual(emptyGrid.Cast < int>());*/
-
-                //TODO: not sure if this is equivalent to above
                 log.info("Checking previous and current periodicity...");
                 boolean isArraysEqual = Arrays.deepEquals(PreviousGridPeriods, GridPeriodicity);
 //                boolean isArraysEmpty = Arrays.deepEquals(PreviousGridPeriods, emptyGrid);
@@ -443,5 +437,20 @@ public class LifeField {
         if (value >= max - 1)
             value = -1;
         return value + 1;
+    }
+
+    //Adds a neighborhood to a HashSet, this is to support the evolution of active cells
+    public void AddNeighborhoodToQueue(Set<Point> set, int row, int column) {
+        set.add(new Point(row, column));
+        set.add(new Point(row, WrapPlusOne(column, columns)));
+        set.add(new Point(row, WrapMinusOne(column, columns)));
+
+        set.add(new Point(WrapPlusOne(row, rows), column));
+        set.add(new Point(WrapMinusOne(row, rows), column));
+        set.add(new Point(WrapPlusOne(row, rows), WrapPlusOne(column, columns)));
+
+        set.add(new Point(WrapMinusOne(row, rows), WrapMinusOne(column, columns)));
+        set.add(new Point(WrapPlusOne(row, rows), WrapMinusOne(column, columns)));
+        set.add(new Point(WrapMinusOne(row, rows), WrapPlusOne(column, columns)));
     }
 }

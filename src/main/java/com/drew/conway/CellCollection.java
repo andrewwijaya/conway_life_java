@@ -222,7 +222,7 @@ public class CellCollection {
         SecondaryActiveSet.Clear();
     }
 
-    //This method colors the patterns recursively
+   //This method colors the patterns recursively
     private void ColorOscillator(int row, int column, int Period) {
         LifeCell Current = _cells[row, column];
         LifeCell N = _cells[WrapMinusOne(row), column];
@@ -285,6 +285,7 @@ public class CellCollection {
             ColorOscillator(WrapPlusOne(row), WrapPlusOne(column), Period);
         }
     }
+
 
     //This method returns a list of the periods of the neighbors
     private List<int> NeighboringPeriods(int row, int column) {
@@ -363,7 +364,6 @@ public class CellCollection {
         }
 
     }
-
 
 
     //Gets all the states of the cells on the grid and returns an encoded string
